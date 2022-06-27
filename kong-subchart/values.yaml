@@ -9,13 +9,25 @@ kong:
     repository: kong/kong-gateway
     tag: 2.8
   env:
-    database: "off"
+    # database: postgres
     role: control_plane
     cluster_cert: /etc/secrets/kong-cluster-cert/tls.crt
     cluster_cert_key: /etc/secrets/kong-cluster-cert/tls.key
     # pg_user: kong
     # pg_password: kong123
     # pg_host: postgresql
+  postgresql:
+    enabled: false
+    auth:
+      username: kong
+      database: kong
+    image:
+      # use postgres < 14 until is https://github.com/Kong/kong/issues/8533 resolved and released
+      # enterprise (kong-gateway) supports postgres 14
+      tag: 13.6.0-debian-10-r52
+    service:
+      ports:
+        postgresql: "5432"
   cluster:
     enabled: true
     type: LoadBalancer
