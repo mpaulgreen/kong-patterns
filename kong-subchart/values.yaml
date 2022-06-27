@@ -9,7 +9,7 @@ kong:
     repository: kong/kong-gateway
     tag: 2.8
   env:
-    # database: postgres
+    database: postgres
     role: control_plane
     cluster_cert: /etc/secrets/kong-cluster-cert/tls.crt
     cluster_cert_key: /etc/secrets/kong-cluster-cert/tls.key
