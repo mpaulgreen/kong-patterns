@@ -1,3 +1,5 @@
+# Scratch pad
+
 ```
 oc create ns kong
 oc create secret generic kong-enterprise-license --from-file=license=./license.json -n kong
@@ -61,11 +63,11 @@ EOF
 
 
 
-- Final Result
+## Final Inference
 //// Kustomize with helm subcharts
 
 do not have values.yaml
 
 helm dependency build && helm template --release-name redhat-kong . > all.yaml && kustomize build
 
-/// but in our case it will be too much of a patches needs to be applied. values.yaml with cp and dp configuration is a better and quicker option
+/// but in our case it will be too much patches needed to be applied. values.yaml with cp and dp configuration is a better and quicker option
