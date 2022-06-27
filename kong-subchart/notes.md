@@ -1,3 +1,4 @@
+```
 oc create ns kong
 oc create secret generic kong-enterprise-license --from-file=license=./license.json -n kong
 openssl req -new -x509 -nodes -newkey ec:<(openssl ecparam -name secp384r1) \
@@ -9,12 +10,10 @@ oc new-app -n kong --template=postgresql-ephemeral --param=POSTGRESQL_USER=kong 
 helm install kong -n kong kong/kong -f cp-values.yaml
 
 oc get secret -n openshift-gitops redhat-kong-gitops-cluster -ojsonpath='{.data.admin\.password}' | base64 -d
-
-
----
+```
 
 ## There are issues with migration job but overall resources are getting initiated correctly.
-
+```
 oc apply -f -<<EOF
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -31,7 +30,8 @@ spec:
     repoURL: https://github.com/mpaulgreen/kong-patterns.git
     targetRevision: main
 EOF
-
+```
+```
 oc apply -f -<<EOF
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -46,7 +46,8 @@ subjects:
   name: redhat-kong-gitops-argocd-application-controller
   namespace: openshift-gitops
 EOF
-
+```
+```
 oc apply -f -<<EOF
 apiVersion: v1
 kind: ServiceAccount
@@ -54,6 +55,7 @@ metadata:
   name: kong-cp-kong
   namespace: kong
 EOF
+```
 
 
 
