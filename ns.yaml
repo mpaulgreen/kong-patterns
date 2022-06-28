@@ -1,0 +1,125 @@
+kind: DeploymentConfig
+apiVersion: apps.openshift.io/v1
+metadata:
+  name: postgresql
+  namespace: kong
+  labels:
+    app: postgresql-persistent
+spec:
+  strategy:
+    type: Recreate
+    recreateParams:
+      timeoutSeconds: 600
+    resources: {}
+    activeDeadlineSeconds: 21600
+  triggers:
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - postgresql
+        from:
+          kind: ImageStreamTag
+          namespace: openshift
+          name: 'postgresql:10-el8'
+        lastTriggeredImage: >-
+          image-registry.openshift-image-registry.svc:5000/openshift/postgresql@sha256:aa0be64241e80dc3162ffed4e42494df9ef54cc10471b263fa6a8d0af486156a
+    - type: ConfigChange
+  replicas: 1
+  revisionHistoryLimit: 10
+  test: false
+  selector:
+    name: postgresql
+  template:
+    metadata:
+      labels:
+        name: postgresql
+      annotations:
+        openshift.io/generated-by: OpenShiftNewApp
+    spec:
+      volumes:
+        - name: postgresql-data
+          persistentVolumeClaim:
+            claimName: postgresql
+      containers:
+        - resources:
+            limits:
+              memory: 512Mi
+          readinessProbe:
+            exec:
+              command:
+                - /usr/libexec/check-container
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          terminationMessagePath: /dev/termination-log
+          name: postgresql
+          livenessProbe:
+            exec:
+              command:
+                - /usr/libexec/check-container
+                - '--live'
+            initialDelaySeconds: 120
+            timeoutSeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          env:
+            - name: POSTGRESQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql
+                  key: database-user
+            - name: POSTGRESQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql
+                  key: database-password
+            - name: POSTGRESQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql
+                  key: database-name
+          securityContext:
+            capabilities: {}
+            privileged: true
+          ports:
+            - containerPort: 5432
+              protocol: TCP
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: postgresql-data
+              mountPath: /var/lib/pgsql/data
+          terminationMessagePolicy: File
+          image: >-
+            image-registry.openshift-image-registry.svc:5000/openshift/postgresql@sha256:aa0be64241e80dc3162ffed4e42494df9ef54cc10471b263fa6a8d0af486156a
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+status:
+  latestVersion: 2
+  observedGeneration: 3
+  replicas: 0
+  updatedReplicas: 0
+  availableReplicas: 0
+  unavailableReplicas: 0
+  details:
+    message: config change
+    causes:
+      - type: ConfigChange
+  conditions:
+    - type: Available
+      status: 'False'
+      lastUpdateTime: '2022-06-28T11:06:51Z'
+      lastTransitionTime: '2022-06-28T11:06:51Z'
+      message: Deployment config does not have minimum availability.
+    - type: Progressing
+      status: 'False'
+      lastUpdateTime: '2022-06-28T11:17:50Z'
+      lastTransitionTime: '2022-06-28T11:17:50Z'
+      reason: ProgressDeadlineExceeded
+      message: replication controller "postgresql-2" has failed progressing

@@ -7,7 +7,10 @@ openssl req -new -x509 -nodes -newkey ec:<(openssl ecparam -name secp384r1) \
   -keyout ./cluster.key -out ./cluster.crt \
   -days 1095 -subj "/CN=kong_clustering"
 oc create secret tls kong-cluster-cert --cert=./cluster.crt --key=./cluster.key -n kong
-oc adm policy add-scc-to-group anyuid system:serviceaccounts:kong-cp-kong
+oc adm policy add-scc-to-group anyuid system:serviceaccounts:kong
+
+
+
 oc adm policy add-scc-to-group anyuid system:serviceaccounts:deployer
 oc new-app -n kong --template=postgresql-persistent --param=POSTGRESQL_USER=kong --param=POSTGRESQL_PASSWORD=kong123 --param=POSTGRESQL_DATABASE=kong
 
@@ -30,7 +33,7 @@ oc apply -f -<<EOF
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: kong-cp
+  name: kong
   namespace: openshift-gitops
 spec:
   destination:
