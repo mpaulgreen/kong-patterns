@@ -5,9 +5,9 @@ type: application
 version: 1.0.0
 appVersion: "1.0.0"
 dependencies:
-- name: kong
-  version: 2.9.1
-  repository: https://charts.konghq.com
+# - name: kong
+#   version: 2.9.1
+#   repository: https://charts.konghq.com
 - name: postgresql
   version: 11.1.15
   repository: https://charts.bitnami.com/bitnami
