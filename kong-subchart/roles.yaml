@@ -8,6 +8,7 @@ rules:
   resourceNames:
   - kongingress
   resources:
+  - ingresses
   - ingressclasses
   verbs:
   - create
