@@ -1,124 +1,248 @@
-apiVersion: v1
-kind: Namespace
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
 metadata:
   annotations:
-    openshift.io/sa.scc.mcs: s0:c26,c25
-    openshift.io/sa.scc.supplemental-groups: 1000700000/10000
-    openshift.io/sa.scc.uid-range: 1000700000/10000
-  creationTimestamp: "2022-06-25T02:20:20Z"
-  deletionTimestamp: "2022-06-28T13:24:20Z"
+    meta.helm.sh/release-name: kong
+    meta.helm.sh/release-namespace: kong
+  creationTimestamp: "2022-06-28T15:32:15Z"
   labels:
-    kubernetes.io/metadata.name: openshift-gitops
-    olm.operatorgroup.uid/2f835fd4-4303-40da-8d7c-d75c775f6ffc: ""
-    openshift.io/cluster-monitoring: "true"
+    app.kubernetes.io/instance: kong
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: kong
+    app.kubernetes.io/version: "2.8"
+    helm.sh/chart: kong-2.10.0
   managedFields:
-  - apiVersion: v1
+  - apiVersion: rbac.authorization.k8s.io/v1
     fieldsType: FieldsV1
     fieldsV1:
       f:metadata:
         f:annotations:
           .: {}
-          f:openshift.io/sa.scc.mcs: {}
-          f:openshift.io/sa.scc.supplemental-groups: {}
-          f:openshift.io/sa.scc.uid-range: {}
-    manager: cluster-policy-controller
-    operation: Update
-    time: "2022-06-25T02:20:20Z"
-  - apiVersion: v1
-    fieldsType: FieldsV1
-    fieldsV1:
-      f:metadata:
+          f:meta.helm.sh/release-name: {}
+          f:meta.helm.sh/release-namespace: {}
         f:labels:
           .: {}
-          f:kubernetes.io/metadata.name: {}
-          f:openshift.io/cluster-monitoring: {}
-    manager: manager
+          f:app.kubernetes.io/instance: {}
+          f:app.kubernetes.io/managed-by: {}
+          f:app.kubernetes.io/name: {}
+          f:app.kubernetes.io/version: {}
+          f:helm.sh/chart: {}
+      f:rules: {}
+    manager: helm
     operation: Update
-    time: "2022-06-25T02:20:20Z"
-  - apiVersion: v1
-    fieldsType: FieldsV1
-    fieldsV1:
-      f:metadata:
-        f:labels:
-          f:olm.operatorgroup.uid/2f835fd4-4303-40da-8d7c-d75c775f6ffc: {}
-    manager: olm
-    operation: Update
-    time: "2022-06-25T02:20:34Z"
-  - apiVersion: v1
-    fieldsType: FieldsV1
-    fieldsV1:
-      f:status:
-        f:conditions:
-          .: {}
-          k:{"type":"NamespaceContentRemaining"}:
-            .: {}
-            f:lastTransitionTime: {}
-            f:message: {}
-            f:reason: {}
-            f:status: {}
-            f:type: {}
-          k:{"type":"NamespaceDeletionContentFailure"}:
-            .: {}
-            f:lastTransitionTime: {}
-            f:message: {}
-            f:reason: {}
-            f:status: {}
-            f:type: {}
-          k:{"type":"NamespaceDeletionDiscoveryFailure"}:
-            .: {}
-            f:lastTransitionTime: {}
-            f:message: {}
-            f:reason: {}
-            f:status: {}
-            f:type: {}
-          k:{"type":"NamespaceDeletionGroupVersionParsingFailure"}:
-            .: {}
-            f:lastTransitionTime: {}
-            f:message: {}
-            f:reason: {}
-            f:status: {}
-            f:type: {}
-          k:{"type":"NamespaceFinalizersRemaining"}:
-            .: {}
-            f:lastTransitionTime: {}
-            f:message: {}
-            f:reason: {}
-            f:status: {}
-            f:type: {}
-    manager: kube-controller-manager
-    operation: Update
-    subresource: status
-    time: "2022-06-28T13:25:17Z"
-  name: openshift-gitops
-  resourceVersion: "3142902"
-  uid: ea017ed3-326e-4140-b8a4-dc708874f74b
-spec:
-  finalizers:
-status:
-  conditions:
-  - lastTransitionTime: "2022-06-28T13:30:14Z"
-    message: All resources successfully discovered
-    reason: ResourcesDiscovered
-    status: "False"
-    type: NamespaceDeletionDiscoveryFailure
-  - lastTransitionTime: "2022-06-28T13:25:17Z"
-    message: All legacy kube types successfully parsed
-    reason: ParsedGroupVersions
-    status: "False"
-    type: NamespaceDeletionGroupVersionParsingFailure
-  - lastTransitionTime: "2022-06-28T13:25:17Z"
-    message: All content successfully deleted, may be waiting on finalization
-    reason: ContentDeleted
-    status: "False"
-    type: NamespaceDeletionContentFailure
-  - lastTransitionTime: "2022-06-28T13:25:17Z"
-    message: 'Some resources are remaining: applications.argoproj.io has 1 resource instances'
-    reason: SomeResourcesRemain
-    status: "True"
-    type: NamespaceContentRemaining
-  - lastTransitionTime: "2022-06-28T13:25:17Z"
-    message: 'Some content in the namespace has finalizers remaining: resources-finalizer.argocd.argoproj.io/foreground in 1 resource instances'
-    reason: SomeFinalizersRemain
-    status: "True"
-    type: NamespaceFinalizersRemaining
-  phase: Terminating
+    time: "2022-06-28T15:32:15Z"
+  name: kong-kong
+  resourceVersion: "3187539"
+  uid: 3832cd7a-43a8-49d2-9f10-00e1f0aff794
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - endpoints
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - endpoints/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - nodes
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - secrets/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - services
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - services/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongconsumers
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongconsumers/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongingresses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongingresses/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongplugins
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongplugins/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - tcpingresses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - tcpingresses/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - udpingresses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - udpingresses/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - extensions
+  resources:
+  - ingresses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - extensions
+  resources:
+  - ingresses/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingresses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingresses/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - endpoints
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongclusterplugins
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongclusterplugins/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingressclasses
+  verbs:
+  - get
+  - list
+  - watch

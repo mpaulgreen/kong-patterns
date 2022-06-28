@@ -1,0 +1,6 @@
+# This sa will move to pre-reqs
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kong
+  namespace: kong

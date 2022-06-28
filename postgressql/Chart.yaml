@@ -1,3 +1,4 @@
+# This chart will be part of pre-reqs
 ---
 apiVersion: v2
 name: redhat-kong
