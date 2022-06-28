@@ -1,7 +1,7 @@
 # This chart will be part of pre-reqs
 ---
 apiVersion: v2
-name: redhat-kong
+name: kong-postgresql
 type: application
 version: 1.0.0
 appVersion: "1.0.0"
