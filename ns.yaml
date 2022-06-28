@@ -1,125 +1,124 @@
-kind: DeploymentConfig
-apiVersion: apps.openshift.io/v1
+apiVersion: v1
+kind: Namespace
 metadata:
-  name: postgresql
-  namespace: kong
+  annotations:
+    openshift.io/sa.scc.mcs: s0:c26,c25
+    openshift.io/sa.scc.supplemental-groups: 1000700000/10000
+    openshift.io/sa.scc.uid-range: 1000700000/10000
+  creationTimestamp: "2022-06-25T02:20:20Z"
+  deletionTimestamp: "2022-06-28T13:24:20Z"
   labels:
-    app: postgresql-persistent
+    kubernetes.io/metadata.name: openshift-gitops
+    olm.operatorgroup.uid/2f835fd4-4303-40da-8d7c-d75c775f6ffc: ""
+    openshift.io/cluster-monitoring: "true"
+  managedFields:
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .: {}
+          f:openshift.io/sa.scc.mcs: {}
+          f:openshift.io/sa.scc.supplemental-groups: {}
+          f:openshift.io/sa.scc.uid-range: {}
+    manager: cluster-policy-controller
+    operation: Update
+    time: "2022-06-25T02:20:20Z"
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:labels:
+          .: {}
+          f:kubernetes.io/metadata.name: {}
+          f:openshift.io/cluster-monitoring: {}
+    manager: manager
+    operation: Update
+    time: "2022-06-25T02:20:20Z"
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:labels:
+          f:olm.operatorgroup.uid/2f835fd4-4303-40da-8d7c-d75c775f6ffc: {}
+    manager: olm
+    operation: Update
+    time: "2022-06-25T02:20:34Z"
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:status:
+        f:conditions:
+          .: {}
+          k:{"type":"NamespaceContentRemaining"}:
+            .: {}
+            f:lastTransitionTime: {}
+            f:message: {}
+            f:reason: {}
+            f:status: {}
+            f:type: {}
+          k:{"type":"NamespaceDeletionContentFailure"}:
+            .: {}
+            f:lastTransitionTime: {}
+            f:message: {}
+            f:reason: {}
+            f:status: {}
+            f:type: {}
+          k:{"type":"NamespaceDeletionDiscoveryFailure"}:
+            .: {}
+            f:lastTransitionTime: {}
+            f:message: {}
+            f:reason: {}
+            f:status: {}
+            f:type: {}
+          k:{"type":"NamespaceDeletionGroupVersionParsingFailure"}:
+            .: {}
+            f:lastTransitionTime: {}
+            f:message: {}
+            f:reason: {}
+            f:status: {}
+            f:type: {}
+          k:{"type":"NamespaceFinalizersRemaining"}:
+            .: {}
+            f:lastTransitionTime: {}
+            f:message: {}
+            f:reason: {}
+            f:status: {}
+            f:type: {}
+    manager: kube-controller-manager
+    operation: Update
+    subresource: status
+    time: "2022-06-28T13:25:17Z"
+  name: openshift-gitops
+  resourceVersion: "3142902"
+  uid: ea017ed3-326e-4140-b8a4-dc708874f74b
 spec:
-  strategy:
-    type: Recreate
-    recreateParams:
-      timeoutSeconds: 600
-    resources: {}
-    activeDeadlineSeconds: 21600
-  triggers:
-    - type: ImageChange
-      imageChangeParams:
-        automatic: true
-        containerNames:
-          - postgresql
-        from:
-          kind: ImageStreamTag
-          namespace: openshift
-          name: 'postgresql:10-el8'
-        lastTriggeredImage: >-
-          image-registry.openshift-image-registry.svc:5000/openshift/postgresql@sha256:aa0be64241e80dc3162ffed4e42494df9ef54cc10471b263fa6a8d0af486156a
-    - type: ConfigChange
-  replicas: 1
-  revisionHistoryLimit: 10
-  test: false
-  selector:
-    name: postgresql
-  template:
-    metadata:
-      labels:
-        name: postgresql
-      annotations:
-        openshift.io/generated-by: OpenShiftNewApp
-    spec:
-      volumes:
-        - name: postgresql-data
-          persistentVolumeClaim:
-            claimName: postgresql
-      containers:
-        - resources:
-            limits:
-              memory: 512Mi
-          readinessProbe:
-            exec:
-              command:
-                - /usr/libexec/check-container
-            initialDelaySeconds: 5
-            timeoutSeconds: 1
-            periodSeconds: 10
-            successThreshold: 1
-            failureThreshold: 3
-          terminationMessagePath: /dev/termination-log
-          name: postgresql
-          livenessProbe:
-            exec:
-              command:
-                - /usr/libexec/check-container
-                - '--live'
-            initialDelaySeconds: 120
-            timeoutSeconds: 10
-            periodSeconds: 10
-            successThreshold: 1
-            failureThreshold: 3
-          env:
-            - name: POSTGRESQL_USER
-              valueFrom:
-                secretKeyRef:
-                  name: postgresql
-                  key: database-user
-            - name: POSTGRESQL_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgresql
-                  key: database-password
-            - name: POSTGRESQL_DATABASE
-              valueFrom:
-                secretKeyRef:
-                  name: postgresql
-                  key: database-name
-          securityContext:
-            capabilities: {}
-            privileged: true
-          ports:
-            - containerPort: 5432
-              protocol: TCP
-          imagePullPolicy: IfNotPresent
-          volumeMounts:
-            - name: postgresql-data
-              mountPath: /var/lib/pgsql/data
-          terminationMessagePolicy: File
-          image: >-
-            image-registry.openshift-image-registry.svc:5000/openshift/postgresql@sha256:aa0be64241e80dc3162ffed4e42494df9ef54cc10471b263fa6a8d0af486156a
-      restartPolicy: Always
-      terminationGracePeriodSeconds: 30
-      dnsPolicy: ClusterFirst
-      securityContext: {}
-      schedulerName: default-scheduler
+  finalizers:
 status:
-  latestVersion: 2
-  observedGeneration: 3
-  replicas: 0
-  updatedReplicas: 0
-  availableReplicas: 0
-  unavailableReplicas: 0
-  details:
-    message: config change
-    causes:
-      - type: ConfigChange
   conditions:
-    - type: Available
-      status: 'False'
-      lastUpdateTime: '2022-06-28T11:06:51Z'
-      lastTransitionTime: '2022-06-28T11:06:51Z'
-      message: Deployment config does not have minimum availability.
-    - type: Progressing
-      status: 'False'
-      lastUpdateTime: '2022-06-28T11:17:50Z'
-      lastTransitionTime: '2022-06-28T11:17:50Z'
-      reason: ProgressDeadlineExceeded
-      message: replication controller "postgresql-2" has failed progressing
+  - lastTransitionTime: "2022-06-28T13:30:14Z"
+    message: All resources successfully discovered
+    reason: ResourcesDiscovered
+    status: "False"
+    type: NamespaceDeletionDiscoveryFailure
+  - lastTransitionTime: "2022-06-28T13:25:17Z"
+    message: All legacy kube types successfully parsed
+    reason: ParsedGroupVersions
+    status: "False"
+    type: NamespaceDeletionGroupVersionParsingFailure
+  - lastTransitionTime: "2022-06-28T13:25:17Z"
+    message: All content successfully deleted, may be waiting on finalization
+    reason: ContentDeleted
+    status: "False"
+    type: NamespaceDeletionContentFailure
+  - lastTransitionTime: "2022-06-28T13:25:17Z"
+    message: 'Some resources are remaining: applications.argoproj.io has 1 resource instances'
+    reason: SomeResourcesRemain
+    status: "True"
+    type: NamespaceContentRemaining
+  - lastTransitionTime: "2022-06-28T13:25:17Z"
+    message: 'Some content in the namespace has finalizers remaining: resources-finalizer.argocd.argoproj.io/foreground in 1 resource instances'
+    reason: SomeFinalizersRemain
+    status: "True"
+    type: NamespaceFinalizersRemaining
+  phase: Terminating

@@ -1,9 +1,10 @@
-postgresql:
-  enabled: true
-  auth:
-    username: kong
-    database: kong
-    password: kong123
+global:
+  postgresql:
+    enabled: true
+    auth:
+      username: kong
+      database: kong
+      password: kong123
 kong:
   deployment:
     serviceAccount:
@@ -23,9 +24,9 @@ kong:
     role: control_plane
     cluster_cert: /etc/secrets/kong-cluster-cert/tls.crt
     cluster_cert_key: /etc/secrets/kong-cluster-cert/tls.key
-    pg_user: kong
-    pg_password: kong123
-    pg_host: kong-postgresql
+    # pg_user: kong
+    # pg_password: kong123
+    # pg_host: kong-postgresql
   cluster:
     enabled: true
     type: LoadBalancer

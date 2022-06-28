@@ -24,7 +24,7 @@ helm install kong -n kong kong/kong -f cp-values.yaml
 
 oc get secret -n openshift-gitops redhat-kong-gitops-cluster -ojsonpath='{.data.admin\.password}' | base64 -d
 
-KZY8oDRdalxXN3Fu9sqJQjOTvh4i2LyU
+Rj2rb4liLd1AzyIPsmJaCXFo68kWHvBK
 ```
 
 ## There are issues with migration job but overall resources are getting initiated correctly.
@@ -84,3 +84,6 @@ do not have values.yaml
 helm dependency build && helm template --release-name redhat-kong . > all.yaml && kustomize build
 
 /// but in our case it will be too much patches needed to be applied. values.yaml with cp and dp configuration is a better and quicker option
+
+
+curl -k -H "Content-Type: application/json" -X PUT --data-binary @ns.yaml http://127.0.0.1:8001/api/v1/namespaces/openshift-gitops/finalize
