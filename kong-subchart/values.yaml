@@ -2,7 +2,7 @@ kong:
   deployment:
     serviceAccount:
       create: true
-      name: kong-cp
+      name: kong
   ingressController:
     enabled: true
     installCRDs: false
