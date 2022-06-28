@@ -64,7 +64,7 @@ oc apply -f -<<EOF
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: kong-cp-kong
+  name: kong
   namespace: kong
 EOF
 ```
