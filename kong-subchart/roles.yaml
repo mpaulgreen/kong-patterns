@@ -6,9 +6,8 @@ rules:
 - apiGroups:
   - networking.k8s.io
   resourceNames:
-  - kongingress
+  - kong
   resources:
-  - ingresses
   - ingressclasses
   verbs:
   - create
