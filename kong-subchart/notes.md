@@ -11,7 +11,7 @@ oc adm policy add-scc-to-group anyuid system:serviceaccounts:kong
 
 
 
-oc adm policy add-scc-to-group anyuid system:serviceaccounts:deployer
+oc adm policy add-scc-to-group anyuid system:serviceaccounts:kong
 oc new-app -n kong --template=postgresql-persistent --param=POSTGRESQL_USER=kong --param=POSTGRESQL_PASSWORD=kong123 --param=POSTGRESQL_DATABASE=kong
 
 
@@ -29,7 +29,7 @@ KZY8oDRdalxXN3Fu9sqJQjOTvh4i2LyU
 
 ## There are issues with migration job but overall resources are getting initiated correctly.
 ```
-oc apply -f -<<EOF
+oc delete -f -<<EOF
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
