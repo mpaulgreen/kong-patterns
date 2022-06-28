@@ -35,7 +35,7 @@ kong:
     service:
       ports:
         postgresql: "5432"
-    clustertelemetry:
+  clustertelemetry:
     enabled: true
     type: LoadBalancer
     tls:
