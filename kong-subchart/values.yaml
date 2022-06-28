@@ -5,12 +5,10 @@ kong:
       name: kong
   ingressController:
     enabled: true
-    installCRDs: true
+    installCRDs: false
     image:
       repository: kong/kubernetes-ingress-controller
       tag: 2.3-redhat
-    watchNamespaces:
-      - kong
   image:
     repository: kong/kong-gateway
     tag: 2.8
