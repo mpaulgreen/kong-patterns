@@ -1,3 +1,9 @@
+postgresql:
+  enabled: true
+  auth:
+    username: kong
+    database: kong
+    password: kong123
 kong:
   deployment:
     serviceAccount:
@@ -27,12 +33,6 @@ kong:
       enabled: true
       servicePort: 8005
       containerPort: 8005
-  postgresql:
-    enabled: true
-    auth:
-      username: kong
-      database: kong
-      password: kong123
   clustertelemetry:
     enabled: true
     type: LoadBalancer
