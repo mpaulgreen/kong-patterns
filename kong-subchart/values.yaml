@@ -5,7 +5,7 @@ kong:
       name: kong
   ingressController:
     enabled: true
-    installCRDs: false
+    installCRDs: true
     image:
       repository: kong/kubernetes-ingress-controller
       tag: 2.3-redhat
