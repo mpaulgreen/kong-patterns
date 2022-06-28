@@ -12,7 +12,7 @@ oc adm policy add-scc-to-group anyuid system:serviceaccounts:kong
 
 
 oc adm policy add-scc-to-group anyuid system:serviceaccounts:kong
-oc new-app -n kong --template=postgresql-persistent --param=POSTGRESQL_USER=kong --param=POSTGRESQL_PASSWORD=kong123 --param=POSTGRESQL_DATABASE=kong
+oc new-app -n kong --template=postgresql-ephemeral --param=POSTGRESQL_USER=kong --param=POSTGRESQL_PASSWORD=kong123 --param=POSTGRESQL_DATABASE=kong
 
 
 oc new-app \
@@ -24,7 +24,7 @@ helm install kong -n kong kong/kong -f cp-values.yaml
 
 oc get secret -n openshift-gitops redhat-kong-gitops-cluster -ojsonpath='{.data.admin\.password}' | base64 -d
 
-Rj2rb4liLd1AzyIPsmJaCXFo68kWHvBK
+lhtX13BnGU6wpQgZxskjqvmaIC05bOdJ
 ```
 
 ## There are issues with migration job but overall resources are getting initiated correctly.
@@ -48,22 +48,6 @@ EOF
 ```
 ```
 oc apply -f -<<EOF
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: gitops-kong-role-binding
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: admin
-subjects:
-- kind: ServiceAccount
-  name: redhat-kong-gitops-argocd-application-controller
-  namespace: openshift-gitops
-EOF
-```
-```
-oc apply -f -<<EOF
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -72,6 +56,46 @@ metadata:
 EOF
 ```
 
+
+- expose svc admin
+
+```bash
+oc expose svc kong-kong-admin -n kong
+oc expose svc kong-kong-manager -n kong
+```
+
+- create secure routes
+
+```bash
+oc create route passthrough kong-kong-manager-tls --port=kong-manager-tls --service=kong-kong-manager -n kong
+oc create route passthrough kong-kong-admin-tls --port=kong-admin-tls --service=kong-kong-admin -n kong
+```
+
+- update the ADMIN URI in the deployment
+
+```bash
+oc patch deploy -n kong kong-kong -p "{\"spec\": { \"template\" : { \"spec\" : {\"containers\":[{\"name\":\"proxy\",\"env\": [{ \"name\" : \"KONG_ADMIN_API_URI\", \"value\": \"$(oc get route -n kong kong-kong-admin -ojsonpath='{.spec.host}')\" }]}]}}}}"
+```
+
+- save the cluster/clustertelemetry endpoints for later
+
+```bash
+export CLUSTER_URL=$(oc -n kong get svc kong-kong-cluster -ojson | jq -r '.status.loadBalancer.ingress[].hostname')
+export CLUSTER_TELEMETRY_URL=$(oc -n kong get svc kong-kong-clustertelemetry -ojson | jq -r '.status.loadBalancer.ingress[].hostname')
+```
+
+- check the management UI is working at:
+
+```bash
+oc get route -n kong kong-kong-manager --template='{{.spec.host}}'
+```
+
+- check the admin endpoint is available
+
+```bash
+http `oc get route -n kong kong-kong-admin --template='{{.spec.host}}'` | jq .version
+"2.8.1.1-enterprise-edition"
+```
 
 
 
