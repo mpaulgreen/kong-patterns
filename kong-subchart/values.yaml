@@ -4,7 +4,7 @@ kong:
       create: true
       name: kong
   ingressController:
-    enabled: true
+    enabled: false
     installCRDs: true
     image:
       repository: kong/kubernetes-ingress-controller
