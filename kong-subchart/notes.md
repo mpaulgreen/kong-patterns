@@ -8,10 +8,20 @@ openssl req -new -x509 -nodes -newkey ec:<(openssl ecparam -name secp384r1) \
   -days 1095 -subj "/CN=kong_clustering"
 oc create secret tls kong-cluster-cert --cert=./cluster.crt --key=./cluster.key -n kong
 oc adm policy add-scc-to-group anyuid system:serviceaccounts:kong-cp-kong
-oc new-app -n kong --template=postgresql-ephemeral --param=POSTGRESQL_USER=kong --param=POSTGRESQL_PASSWORD=kong123 --param=POSTGRESQL_DATABASE=kong
+oc adm policy add-scc-to-group anyuid system:serviceaccounts:deployer
+oc new-app -n kong --template=postgresql-persistent --param=POSTGRESQL_USER=kong --param=POSTGRESQL_PASSWORD=kong123 --param=POSTGRESQL_DATABASE=kong
+
+
+oc new-app \
+    -e POSTGRESQL_USER=kong \
+    -e POSTGRESQL_PASSWORD=kong123 \
+    -e POSTGRESQL_DATABASE=kong \
+    postgresql:9.5
 helm install kong -n kong kong/kong -f cp-values.yaml
 
 oc get secret -n openshift-gitops redhat-kong-gitops-cluster -ojsonpath='{.data.admin\.password}' | base64 -d
+
+KZY8oDRdalxXN3Fu9sqJQjOTvh4i2LyU
 ```
 
 ## There are issues with migration job but overall resources are getting initiated correctly.
