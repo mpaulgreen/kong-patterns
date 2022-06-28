@@ -29,7 +29,7 @@ Rj2rb4liLd1AzyIPsmJaCXFo68kWHvBK
 
 ## There are issues with migration job but overall resources are getting initiated correctly.
 ```
-oc delete -f -<<EOF
+oc apply -f -<<EOF
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -86,4 +86,4 @@ helm dependency build && helm template --release-name redhat-kong . > all.yaml &
 /// but in our case it will be too much patches needed to be applied. values.yaml with cp and dp configuration is a better and quicker option
 
 
-curl -k -H "Content-Type: application/json" -X PUT --data-binary @ns.yaml http://127.0.0.1:8001/api/v1/namespaces/openshift-gitops/finalize
+curl -k -H "Content-Type: application/yaml" -X PUT --data-binary @ns.yaml http://127.0.0.1:8001/api/v1/namespaces/openshift-gitops/finalize
