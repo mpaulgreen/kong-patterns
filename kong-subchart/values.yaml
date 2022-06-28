@@ -56,3 +56,6 @@ kong:
   manager:
     enabled: true
     type: ClusterIP
+  migrations:
+    preUpgrade: false
+    postUpgrade: true
